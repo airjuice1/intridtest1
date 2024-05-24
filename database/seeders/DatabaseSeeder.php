@@ -9,6 +9,7 @@ use Database\Seeders\ProductListSeeder;
 use Database\Seeders\ModelListSeeder;
 use Database\Seeders\ParamListSeeder;
 use Database\Seeders\OptionListSeeder;
+use Database\Seeders\ProductSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -29,6 +30,7 @@ class DatabaseSeeder extends Seeder
             ModelListSeeder::class,
             ParamListSeeder::class,
             OptionListSeeder::class,
+            ProductSeeder::class,
         ]);
     }
 }
