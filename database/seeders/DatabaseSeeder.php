@@ -8,6 +8,7 @@ use Illuminate\Database\Seeder;
 use Database\Seeders\ProductListSeeder;
 use Database\Seeders\ModelListSeeder;
 use Database\Seeders\ParamListSeeder;
+use Database\Seeders\OptionListSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -27,6 +28,7 @@ class DatabaseSeeder extends Seeder
             ProductListSeeder::class,
             ModelListSeeder::class,
             ParamListSeeder::class,
+            OptionListSeeder::class,
         ]);
     }
 }
