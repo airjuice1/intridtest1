@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 use Database\Seeders\ProductListSeeder;
 use Database\Seeders\ModelListSeeder;
+use Database\Seeders\ParamListSeeder;
 
 class DatabaseSeeder extends Seeder
 {
@@ -25,6 +26,7 @@ class DatabaseSeeder extends Seeder
         $this->call([
             ProductListSeeder::class,
             ModelListSeeder::class,
+            ParamListSeeder::class,
         ]);
     }
 }
