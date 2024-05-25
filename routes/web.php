@@ -1,17 +1,6 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use App\Models\Product;
-use App\Models\ProductList;
-use App\Models\ModelList;
-use App\Models\OptionList;
-use Illuminate\Support\Arr;
+use App\Http\Controllers\WelcomeController;
 
-Route::get('/', function () {
-    
-    $data = Product::distinct()->get(['vendor_code'])->toArray();
-
-    dd($data);
-    
-    
-});
+Route::resource('/', WelcomeController::class);
