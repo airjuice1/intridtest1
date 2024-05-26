@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\ModelList;
+use App\Models\ParamList;
 
 class WelcomeController extends Controller
 {
@@ -11,7 +13,13 @@ class WelcomeController extends Controller
      */
     public function index()
     {
-        return view('welcome.index');
+        $models = ModelList::get()->sortBy('id')->toArray();
+        $params = ParamList::with('options')->orderBy('id')->get()->toArray();
+
+        return view('welcome.index', [
+            'models' => $models,
+            'params' => $params,
+        ]);
     }
 
     /**
@@ -27,7 +35,11 @@ class WelcomeController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        echo '<pre>';
+        var_dump($request->all());
+        echo '</pre>';
+        // continue;
+        exit();
     }
 
     /**
