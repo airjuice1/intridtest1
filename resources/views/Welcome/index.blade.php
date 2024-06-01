@@ -13,18 +13,19 @@
 	<div class="row">
 		<div class="col-3">
 
-			<form method="post">
-
-				@csrf
+			<form method="get">
 
 				<div class="col">
 					<button type="submit" class="btn btn-primary mb-3 form-control-lg">{{ __('Найти') }}</button>
 				</div>
 
 				<h4>{{ __('Модель') }}</h4>
+
 				<select class="form-select" multiple aria-label="Multiple select example" name="model_id[]">
 					@foreach ($models as $model)
-						<option value="{{ $model['id'] }}">{{ $model['name'] }}</option>
+						@if ($isset['model_id'])
+							<option value="{{ $model['id'] }}">{{ $model['name'] }}</option>
+						@endif
 					@endforeach
 				</select>
 				
@@ -46,7 +47,15 @@
 			
 		</div>
 
-		<div class="col-9"></div>
+		<div class="col-9">
+			
+			@php
+				// dd($sql);
+				// dd($products);
+				dd($formParams);
+			@endphp
+
+		</div>
 	</div>
 	
 </div>

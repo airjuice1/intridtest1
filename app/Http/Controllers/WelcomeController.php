@@ -3,22 +3,80 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Models\Product;
 use App\Models\ModelList;
 use App\Models\ParamList;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Query\JoinClause;
 
 class WelcomeController extends Controller
 {
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $formParams = $request->validate([
+            'model_id' => ['nullable'],
+            'color_id' => ['nullable'],
+            'size_id' => ['nullable'],
+        ]);
+
         $models = ModelList::get()->sortBy('id')->toArray();
         $params = ParamList::with('options')->orderBy('id')->get()->toArray();
 
+        $products = DB::table('products')
+        ->distinct()
+        ->selectRaw('products.vendor_code')
+        ->selectRaw('models.name')
+        ->selectRaw('products1.param_list_id as param1')
+        ->selectRaw('products2.param_list_id as param2')
+        ->selectRaw('products1.option_list_id as option1')
+        ->selectRaw('products2.option_list_id as option2')
+        ->selectRaw('options1.value as value_option1')
+        ->selectRaw('options2.value as value_option2')
+        ->selectRaw('warehouse.amount as amount')
+        ->selectRaw('warehouse.price as price')
+        ->joinSub(DB::table('products as products1')->where('param_list_id', '=', 1), 'products1', function (JoinClause $join) {
+            $join->on('products.vendor_code', '=', 'products1.vendor_code');
+        })
+        ->joinSub(DB::table('products as products2')->where('param_list_id', '=', 2), 'products2', function (JoinClause $join) {
+            $join->on('products.vendor_code', '=', 'products2.vendor_code');
+        })
+        ->join('model_lists as models', 'products.model_list_id', '=', 'models.id')
+        ->join('option_lists as options1', 'products1.option_list_id', '=', 'options1.id')
+        ->join('option_lists as options2', 'products2.option_list_id', '=', 'options2.id')
+        ->leftJoin('warehouses as warehouse', 'warehouse.vendor_code', '=', 'products.vendor_code')
+        ;
+
+        $model_ids = $formParams['model_id'] ?? [];
+        $color_ids = $formParams['color_id'] ?? [];
+        $size_ids = $formParams['size_id'] ?? [];
+
+        if ($model_ids) {
+            $products->whereIn('products.model_list_id', $model_ids);
+        }
+
+        if ($color_ids) {
+            $products
+            ->where('products1.param_list_id', '=', 1)
+            ->whereIn('products1.option_list_id', $color_ids)
+            ;
+        }
+
+        if ($size_ids) {
+            $products
+            ->where('products2.param_list_id', '=', 2)
+            ->whereIn('products2.option_list_id', $size_ids)
+            ;
+        }
+        
         return view('welcome.index', [
             'models' => $models,
             'params' => $params,
+            'products' => $products->get()->toArray(),
+            // 'sql' => $products->toSql(),
+            'formParams' => $formParams,
         ]);
     }
 
@@ -35,11 +93,6 @@ class WelcomeController extends Controller
      */
     public function store(Request $request)
     {
-        echo '<pre>';
-        var_dump($request->all());
-        echo '</pre>';
-        // continue;
-        exit();
     }
 
     /**
