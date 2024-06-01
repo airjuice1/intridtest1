@@ -23,9 +23,9 @@
 
 				<select class="form-select" multiple aria-label="Multiple select example" name="model_id[]">
 					@foreach ($models as $model)
-						@if ($isset['model_id'])
+						
 							<option value="{{ $model['id'] }}">{{ $model['name'] }}</option>
-						@endif
+						
 					@endforeach
 				</select>
 				
