@@ -23,22 +23,63 @@
 
 				<select class="form-select" multiple aria-label="Multiple select example" name="model_id[]">
 					@foreach ($models as $model)
-						
-							<option value="{{ $model['id'] }}">{{ $model['name'] }}</option>
-						
+
+						@php
+							$selected = '';
+						@endphp
+
+						@if (@isset($formParams['model_id']))
+							
+							@foreach ($formParams['model_id'] as $selected)
+
+								@if ($model['id'] == $selected)
+									@php
+										$selected = 'selected';
+									@endphp
+									@break
+								@endif
+
+							@endforeach
+						@endif
+
+						<option {{ $selected }} value="{{ $model['id'] }}">{{ $model['name'] }}</option>
+
 					@endforeach
 				</select>
 				
 				@foreach ($params as $param)
 					@php
 						$name = false;
-						if ($param['id'] == 1) $name = 'color_id[]';
-						if ($param['id'] == 2) $name = 'size_id[]';
+						if ($param['id'] == 1) {
+							$name = 'color_id';
+						}
+						if ($param['id'] == 2) {
+							$name = 'size_id';
+						}
 					@endphp
 					<h4>{{ __($param['name']) }}</h4>
-					<select class="form-select" multiple aria-label="Multiple select example" name="{{ $name }}">
+					<select class="form-select" multiple aria-label="Multiple select example" name="{{ $name }}[]">
 						@foreach ($param['options'] as $option)
-							<option value="{{ $option['id'] }}">{{ __($option['value']) }}</option>
+
+							@php
+								$selected = '';
+							@endphp
+
+							@if (@isset($formParams[$name]))
+								
+								@foreach ($formParams[$name] as $selected)
+
+									@if ($option['id'] == $selected)
+										@php
+											$selected = 'selected';
+										@endphp
+										@break
+									@endif
+
+								@endforeach
+							@endif
+
+							<option {{ $selected }} value="{{ $option['id'] }}">{{ __($option['value']) }}</option>
 						@endforeach
 					</select>
 				@endforeach
@@ -51,7 +92,7 @@
 			
 			@php
 				// dd($sql);
-				// dd($products);
+				dd($products);
 				dd($formParams);
 			@endphp
 
