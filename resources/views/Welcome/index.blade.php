@@ -89,11 +89,60 @@
 		</div>
 
 		<div class="col-9">
-			
+
+			@if ($products)
+
+				@php
+					$open = true;
+				@endphp
+
+				<h2>{{ ('Найденные товары') }}</h2>
+				<br>
+
+				@foreach ($products as $product)
+
+					@if ($open)
+						<div class="row">
+						@php
+							$open = false;
+						@endphp
+					@endif
+
+					<div class="col-4">
+						<div class="card">
+						  <img src="https://placehold.co/100?text=Product+Photo&font=roboto" class="card-img-top" alt="">
+						  <div class="card-body">
+
+						  	<ul class="list-group list-group-flush">
+						  	    <li class="list-group-item"><b>{{ __('Товар: ') }}</b>{{ $product->product }}</li>
+						  	    <li class="list-group-item"><b>{{ __('Цена: ') }}</b>{{ $product->price }}</li>
+						  	    <li class="list-group-item"><b>{{ __('Остаток: ') }}</b>{{ $product->amount }}</li>
+						  	  </ul>
+						  </div>
+						</div>
+					</div>
+
+					@if ($loop->iteration % 3 == 0 && $loop->iteration != 0)
+						</div>
+						<br>
+						@php
+							$open = true;
+						@endphp
+					@endif
+					
+				@endforeach
+
+				{{ $products->links() }}
+
+
+			@else
+				<h2>{{ __('Таких товаров не найдено') }}</h2>
+			@endif
+
 			@php
 				// dd($sql);
-				dd($products);
-				dd($formParams);
+				// dd($products);
+				// dd($formParams);
 			@endphp
 
 		</div>

@@ -11,6 +11,8 @@ use Illuminate\Database\Query\JoinClause;
 
 class WelcomeController extends Controller
 {
+
+    private $perPage = 9;
     /**
      * Display a listing of the resource.
      */
@@ -22,9 +24,13 @@ class WelcomeController extends Controller
             'size_id' => ['nullable'],
         ]);
 
+        $model_ids = $formParams['model_id'] ?? [];
+        $color_ids = $formParams['color_id'] ?? [];
+        $size_ids = $formParams['size_id'] ?? [];
+
         $models = ModelList::get()->sortBy('id')->toArray();
         $params = ParamList::with('options')->orderBy('id')->get()->toArray();
-
+        
         $products = DB::table('products')
         ->distinct()
         ->selectRaw('products.vendor_code')
@@ -50,10 +56,6 @@ class WelcomeController extends Controller
         ->leftJoin('warehouses as warehouse', 'warehouse.vendor_code', '=', 'products.vendor_code')
         ;
 
-        $model_ids = $formParams['model_id'] ?? [];
-        $color_ids = $formParams['color_id'] ?? [];
-        $size_ids = $formParams['size_id'] ?? [];
-
         if ($model_ids) {
             $products->whereIn('products.model_list_id', $model_ids);
         }
@@ -71,12 +73,17 @@ class WelcomeController extends Controller
             ->whereIn('products2.option_list_id', $size_ids)
             ;
         }
+
+        // dd($products->paginate($this->perPage)->withQueryString());
+        // dd($request->all());
+        
         
         return view('welcome.index', [
             'models' => $models,
             'params' => $params,
-            'products' => $products->get()->toArray(),
-            // 'sql' => $products->toSql(),
+            'products' => $products->paginate($this->perPage)->withQueryString(),
+            // 'products' => [],
+            'sql' => $products->toSql(),
             'formParams' => $formParams,
         ]);
     }
