@@ -8,6 +8,7 @@ use App\Models\ModelList;
 use App\Models\ParamList;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Query\JoinClause;
+use Illuminate\Pagination\Paginator;
 
 class WelcomeController extends Controller
 {
@@ -74,16 +75,13 @@ class WelcomeController extends Controller
             ;
         }
 
-        // dd($products->paginate($this->perPage)->withQueryString());
-        // dd($request->all());
-        
-        
+        $products = DB::table($products)->paginate($this->perPage)->withQueryString();
+
         return view('welcome.index', [
             'models' => $models,
             'params' => $params,
-            'products' => $products->paginate($this->perPage)->withQueryString(),
-            // 'products' => [],
-            'sql' => $products->toSql(),
+            'products' => $products,
+            // 'sql' => $products->toSql(),
             'formParams' => $formParams,
         ]);
     }
