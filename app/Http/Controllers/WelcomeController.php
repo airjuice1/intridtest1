@@ -83,7 +83,7 @@ class WelcomeController extends Controller
 
         $products = DB::table($products)->paginate($this->perPage)->withQueryString();
 
-        return view('welcome.index', [
+        return view('Welcome.index', [
             'models' => $models,
             'params' => $params,
             'products' => $products,

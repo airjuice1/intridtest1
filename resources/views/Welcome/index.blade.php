@@ -1,4 +1,4 @@
-@include('common.header', ['title' => __('Товары')])
+@include('Common.header', ['title' => __('Товары')])
 
 <div class="container">
 	
@@ -154,4 +154,4 @@
 	
 </div>
 
-@include('common.footer')
+@include('Common.footer')
