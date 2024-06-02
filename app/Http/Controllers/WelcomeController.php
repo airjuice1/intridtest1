@@ -23,11 +23,13 @@ class WelcomeController extends Controller
             'model_id' => ['nullable'],
             'color_id' => ['nullable'],
             'size_id' => ['nullable'],
+            'instock' => ['nullable'],
         ]);
 
         $model_ids = $formParams['model_id'] ?? [];
         $color_ids = $formParams['color_id'] ?? [];
         $size_ids = $formParams['size_id'] ?? [];
+        $instock = $formParams['instock'] ?? NULL;
 
         $models = ModelList::get()->sortBy('id')->toArray();
         $params = ParamList::with('options')->orderBy('id')->get()->toArray();
@@ -56,6 +58,10 @@ class WelcomeController extends Controller
         ->join('option_lists as options2', 'products2.option_list_id', '=', 'options2.id')
         ->leftJoin('warehouses as warehouse', 'warehouse.vendor_code', '=', 'products.vendor_code')
         ;
+
+        if ($instock) {
+            $products->where('warehouse.amount', '>', 0);
+        }
 
         if ($model_ids) {
             $products->whereIn('products.model_list_id', $model_ids);

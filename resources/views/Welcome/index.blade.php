@@ -1,4 +1,4 @@
-@include('common.header', ['title' => 'Товары'])
+@include('common.header', ['title' => __('Товары')])
 
 <div class="container">
 	
@@ -15,8 +15,12 @@
 
 			<form method="get">
 
-				<div class="col">
-					<button type="submit" class="btn btn-primary mb-3 form-control-lg">{{ __('Найти') }}</button>
+				<button type="submit" class="btn btn-primary mb-3 form-control-lg">{{ __('Найти') }}</button>
+
+
+				<div class="form-check">
+				 <input class="form-check-input" type="checkbox" value="1" name="instock" @isset ($formParams['instock']) checked @endisset>
+				  <label class="form-check-label" for="flexCheckDefault">{{ __('В наличии') }}</label>
 				</div>
 
 				<h4>{{ __('Модель') }}</h4>
@@ -96,7 +100,7 @@
 					$open = true;
 				@endphp
 
-				<h2>{{ ('Найденные товары') }}</h2>
+				<h2>{{ __('Найденные товары') }} - {{ $products->total() }}</h2>
 				<br>
 
 				@foreach ($products as $product)
